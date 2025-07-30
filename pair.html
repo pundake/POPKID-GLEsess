@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>POPKID-GLE | Hacker Portal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Courier New', monospace;
+      color: #00ff00;
+      background: #000;
+      overflow: hidden;
+    }
+
+    #bgVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -2;
+      opacity: 0.15;
+      filter: blur(1px) contrast(1.2);
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      backdrop-filter: blur(2px);
+      background: rgba(0,0,0,0.85);
+      z-index: -1;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid #00ff00;
+      border-radius: 14px;
+      padding: 25px;
+      box-shadow: 0 0 25px #00ff00;
+      animation: pulse 2s infinite alternate;
+      margin: auto;
+    }
+
+    @keyframes pulse {
+      from { box-shadow: 0 0 10px #00ff00; }
+      to { box-shadow: 0 0 25px #00ff00; }
+    }
+
+    .logo {
+      font-size: 40px;
+      text-align: center;
+      color: #00ff00;
+      margin-bottom: 10px;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      color: #0f0;
+      letter-spacing: 1px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: #0f0;
+      margin-bottom: 15px;
+    }
+
+    #liveTime, #batteryLevel {
+      text-align: center;
+      font-size: 12px;
+      color: #90ee90;
+      margin-bottom: 10px;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 12px;
+      font-size: 14px;
+      border: 1px solid #0f0;
+      background: rgba(0, 255, 0, 0.1);
+      border-radius: 10px;
+      color: #0f0;
+      outline: none;
+    }
+
+    .generate-btn {
+      width: 100%;
+      padding: 12px;
+      background: #00ff00;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .generate-btn:hover {
+      background: black;
+      color: #00ff00;
+      border: 1px solid #00ff00;
+    }
+
+    .code-display {
+      text-align: center;
+      margin: 14px 0;
+      background: black;
+      border: 1px dashed #0f0;
+      padding: 10px;
+      border-radius: 8px;
+      color: #00ff00;
+      font-size: 14px;
+    }
+
+    .copy-btn {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #0f0;
+      color: #00ff00;
+      background: transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: 0.3s;
+    }
+
+    .copy-btn:hover {
+      background: #00ff00;
+      color: black;
+    }
+
+    .audio-buttons {
+      margin-top: 20px;
+    }
+
+    .audio-track {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #111;
+      border: 1px solid #00ff00;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      color: #00ff00;
+    }
+
+    .audio-btn {
+      background: none;
+      border: none;
+      color: #0f0;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .social-icons {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .social-icons a {
+      color: #00ff00;
+      font-size: 18px;
+      margin: 0 10px;
+      transition: 0.3s;
+    }
+
+    .social-icons a:hover {
+      color: lime;
+      transform: scale(1.2);
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: #0f0;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<video autoplay muted loop id="bgVideo">
+  <source src="https://files.catbox.moe/fe5p8s.mp4" type="video/mp4">
+</video>
+
+<div class="overlay"></div>
+
+<div class="container">
+  <div class="logo"><i class="fas fa-terminal"></i></div>
+  <div class="title">POPKID-GLE</div>
+  <div class="subtitle">[ Pair Code Generator - Hacker Console ]</div>
+
+  <div id="liveTime"></div>
+  <div id="batteryLevel"></div>
+
+  <div class="input-group">
+    <input type="text" id="mobileNumber" class="input-field" placeholder="+254111385747" aria-label="Enter phone number">
+  </div>
+
+  <button class="generate-btn" id="submit" aria-label="Generate Pair Code"><i class="fas fa-code"></i> Generate</button>
+
+  <div class="code-display" id="codeDisplay">_Awaiting Pair Code...</div>
+
+  <button class="copy-btn" id="copy" onclick="copyCode()" aria-label="Copy Pair Code"><i class="fas fa-copy"></i> Copy</button>
+
+  <div class="audio-buttons">
+    <div class="audio-track" data-index="0">
+      <span>Track 1: GlitchCore</span>
+      <button class="audio-btn"><i class="fas fa-play"></i></button>
+    </div>
+    <div class="audio-track" data-index="1">
+      <span>Track 2: ByteStorm</span>
+      <button class="audio-btn"><i class="fas fa-play"></i></button>
+    </div>
+    <div class="audio-track" data-index="2">
+      <span>Track 3: Matrix Drift</span>
+      <button class="audio-btn"><i class="fas fa-play"></i></button>
+    </div>
+  </div>
+
+  <div class="social-icons">
+    <a href="https://youtube.com/@popkid254" target="_blank"><i class="fab fa-youtube"></i></a>
+    <a href="https://t.me/popkid_254" target="_blank"><i class="fab fa-telegram"></i></a>
+    <a href="https://whatsapp.com/channel/0029VbB6d0KKAwEdvcgqrH26" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    <a href="https://github.com/devpopkid/POPKID-GLE" target="_blank"><i class="fab fa-github"></i></a>
+  </div>
+
+  <div class="footer">© 2025 Popkid | Hacker Mode Activated</div>
+</div>
+
+<!-- Audio Tracks -->
+<audio id="audio0" src="https://files.catbox.moe/j4ids2.mp3" preload="none"></audio>
+<audio id="audio1" src=" preload="none"></audio>
+<audio id="audio2" src="https://files.catbox.moe/vv2qla.mp3" preload="none"></audio>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
+<script>
+  setInterval(() => {
+    const now = new Date();
+    document.getElementById("liveTime").innerText = "🕒 " + now.toLocaleTimeString();
+  }, 1000);
+
+  if (navigator.getBattery) {
+    navigator.getBattery().then(battery => {
+      function updateBatteryStatus() {
+        document.getElementById("batteryLevel").innerText =
+          `🔋 Battery: ${Math.round(battery.level * 100)}%`;
+      }
+      updateBatteryStatus();
+      battery.addEventListener("levelchange", updateBatteryStatus);
+    });
+  } else {
+    document.getElementById("batteryLevel").innerText = "🔋 Battery: Unavailable";
+  }
+
+  document.getElementById("submit").addEventListener("click", async () => {
+    const number = document.getElementById("mobileNumber").value.trim();
+    const codeDisplay = document.getElementById("codeDisplay");
+    if (!number) {
+      codeDisplay.innerText = "❗ Enter number first...";
+      return;
+    }
+    codeDisplay.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Hacking in...";
+    try {
+      const response = await axios(`/code?number=${number.replace(/[^0-9]/g, "")}`);
+      const code = response.data.code || "Unavailable";
+      codeDisplay.innerText = `> CODE: ${code}`;
+    } catch (e) {
+      codeDisplay.innerText = "❌ Failed to retrieve code.";
+    }
+  });
+
+  document.getElementById("mobileNumber").addEventListener("keydown", e => {
+    if (e.key === "Enter") document.getElementById("submit").click();
+  });
+
+  function copyCode() {
+    const code = document.getElementById("codeDisplay").innerText.replace('> CODE: ', '');
+    navigator.clipboard.writeText(code).then(() => {
+      const btn = document.getElementById("copy");
+      btn.innerHTML = "<i class='fas fa-check'></i> Copied!";
+      setTimeout(() => {
+        btn.innerHTML = "<i class='fas fa-copy'></i> Copy";
+      }, 2000);
+    });
+  }
+
+  const audios = [audio0, audio1, audio2];
+  document.querySelectorAll(".audio-track").forEach((trackDiv, index) => {
+    const btn = trackDiv.querySelector(".audio-btn");
+    btn.addEventListener("click", () => {
+      const audio = audios[index];
+      if (audio.paused) {
+        audios.forEach((a, i) => {
+          if (i !== index) {
+            a.pause();
+            a.currentTime = 0;
+            document.querySelector(`.audio-track[data-index="${i}"] .audio-btn`).innerHTML = `<i class="fas fa-play"></i>`;
+          }
+        });
+        audio.play();
+        btn.innerHTML = `<i class="fas fa-pause"></i>`;
+      } else {
+        audio.pause();
+        btn.innerHTML = `<i class="fas fa-play"></i>`;
+      }
+    });
+  });
+</script>
+</body>
+</html>
